@@ -38,23 +38,15 @@ namespace FinanceTracker.Controllers
         [HttpGet("me")]
         public async Task<IActionResult> GetMe()
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
+            var publicIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
                 ?? User.FindFirst("sub");
 
-            if (userIdClaim == null)
-                return Unauthorized("User ID not found in token.");
+            if (publicIdClaim == null)
+                return Unauthorized();
 
-            var userId = int.Parse(userIdClaim.Value);
-            var user = await _authService.GetMe(userId);
-
-            return Ok(new
-            {
-                user.Id,
-                user.FirstName,
-                user.LastName,
-                user.Email,
-                user.CreatedAt
-            });
+            var publicId = Guid.Parse(publicIdClaim.Value);
+            var result = await _authService.GetMe(publicId);
+            return Ok(result);
         }
     }
 }

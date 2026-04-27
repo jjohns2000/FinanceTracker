@@ -19,6 +19,14 @@ namespace FinanceTracker.Helper
             services.AddSingleton<DbContext>();
             // Auth Services
             services.AddScoped<IAuthService, AuthService>();
+            // Navbar
+            services.AddScoped<INavService, NavService>();
+            // Dashboard
+            services.AddScoped<IDashboardService, DashboardService>();
+            // Settings
+            services.AddScoped<ISettingsService, SettingsService>();
+            //Income
+            services.AddScoped<IIncomeService, IncomeService>();
         }
     }
 }

@@ -15,7 +15,7 @@ namespace FinanceTracker.Helper
             _configuration = configuration;
         }
 
-        public string GenerateToken(int userId, string email)
+        public string GenerateToken(Guid publicId, string email)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
             var secretKey = jwtSettings["SecretKey"]!;
@@ -28,7 +28,7 @@ namespace FinanceTracker.Helper
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub, publicId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };

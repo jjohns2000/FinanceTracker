@@ -10,9 +10,9 @@ namespace FinanceTracker.Services
 
     public interface IAuthService
     {
-        Task<AuthResponse> Register(RegisterRequest request);
+        Task<RegisterResponse> Register(RegisterRequest request);
         Task<AuthResponse> Login(LoginRequest request);
-        Task<UserEntity> GetMe(int userId);
+        Task<UserEntity> GetMe(Guid publicId);
     }
 
     // ─── Implementation ─────────────────────────────────────
@@ -32,27 +32,27 @@ namespace FinanceTracker.Services
 
         // ─── Register ───────────────────────────────────────
 
-        public async Task<AuthResponse> Register(RegisterRequest request)
+        public async Task<RegisterResponse> Register(RegisterRequest request)
         {
             using var connection = _db.CreateConnection();
 
-            // Check if email already exists — single string parameter
+            // Check if email already exists
             var checkParams = new DynamicParameters();
             checkParams.Add("@Email", request.Email);
 
-            var existingUser = await connection.QueryFirstOrDefaultAsync<UserEntity>(
-                "sp_GetUserByEmail",
+            var emailExists = await connection.QueryFirstOrDefaultAsync<int>(
+                "sp_CheckEmailExists",
                 checkParams,
                 commandType: System.Data.CommandType.StoredProcedure
             );
 
-            if (existingUser != null)
+            if (emailExists == 1)
                 throw new Exception("Email is already registered.");
 
-            // Hash password before serializing
+            // Hash password
             var passwordHash = _passwordHelper.HashPassword(request.Password);
 
-            // Build JSON payload — JSON parameter for multiple values
+            // Build JSON payload
             var payload = new
             {
                 request.FirstName,
@@ -64,24 +64,17 @@ namespace FinanceTracker.Services
             var registerParams = new DynamicParameters();
             registerParams.Add("@JsonData", JsonSerializer.Serialize(payload));
 
-            var newUser = await connection.QueryFirstOrDefaultAsync<UserEntity>(
-                "sp_RegisterUser",
-                registerParams,
-                commandType: System.Data.CommandType.StoredProcedure
+            // Returns the new Id
+            var result = await connection.QueryFirstOrDefaultAsync<RegisterResponse>(
+            "sp_RegisterUser",
+            registerParams,
+            commandType: System.Data.CommandType.StoredProcedure
             );
 
-            if (newUser == null)
+            if (result == null)
                 throw new Exception("Registration failed.");
 
-            var token = _jwtHelper.GenerateToken(newUser.Id, newUser.Email);
-
-            return new AuthResponse
-            {
-                Token = token,
-                Email = newUser.Email,
-                FirstName = newUser.FirstName,
-                LastName = newUser.LastName
-            };
+            return result;
         }
 
         // ─── Login ──────────────────────────────────────────
@@ -90,7 +83,6 @@ namespace FinanceTracker.Services
         {
             using var connection = _db.CreateConnection();
 
-            // Single string parameter
             var checkParams = new DynamicParameters();
             checkParams.Add("@Email", request.Email);
 
@@ -111,11 +103,12 @@ namespace FinanceTracker.Services
             if (!user.IsActive)
                 throw new Exception("Account is deactivated.");
 
-            var token = _jwtHelper.GenerateToken(user.Id, user.Email);
+            var token = _jwtHelper.GenerateToken(user.PublicId, user.Email);
 
             return new AuthResponse
             {
                 Token = token,
+                PublicId = user.PublicId,
                 Username = user.Username,
                 Email = user.Email,
                 FirstName = user.FirstName,
@@ -125,16 +118,15 @@ namespace FinanceTracker.Services
 
         // ─── Get Me ─────────────────────────────────────────
 
-        public async Task<UserEntity> GetMe(int userId)
+        public async Task<UserEntity> GetMe(Guid publicId)
         {
             using var connection = _db.CreateConnection();
 
-            // Single int parameter
             var parameters = new DynamicParameters();
-            parameters.Add("@Id", userId);
+            parameters.Add("@PublicId", publicId);
 
             var user = await connection.QueryFirstOrDefaultAsync<UserEntity>(
-                "sp_GetUserById",
+                "sp_GetUserByPublicId",
                 parameters,
                 commandType: System.Data.CommandType.StoredProcedure
             );
