@@ -361,3 +361,18 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+## .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.swp
+
+## Secrets — never commit these
+appsettings.Production.json
+appsettings.Development.json
+
+## Keep only the base appsettings.json
+## which should have NO real secrets
