@@ -27,6 +27,8 @@ namespace FinanceTracker.Helper
             services.AddScoped<ISettingsService, SettingsService>();
             //Income
             services.AddScoped<IIncomeService, IncomeService>();
+
+            services.AddScoped<IEmploymentService, EmploymentService>();
         }
     }
 }
