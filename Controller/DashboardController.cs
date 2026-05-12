@@ -32,5 +32,32 @@ namespace FinanceTracker.Controllers
                 GetPublicId(), month, year);
             return Ok(result);
         }
+
+        [HttpGet("trend")]
+        public async Task<IActionResult> GetMonthlyTrend(
+            [FromQuery] int month, [FromQuery] int year)
+        {
+            var result = await _dashboardService.GetMonthlyTrend(
+                GetPublicId(), month, year);
+            return Ok(result);
+        }
+
+        [HttpGet("income-pie")]
+        public async Task<IActionResult> GetIncomePieData(
+            [FromQuery] int month, [FromQuery] int year)
+        {
+            var result = await _dashboardService.GetIncomePieData(
+                GetPublicId(), month, year);
+            return Ok(result);
+        }
+
+        [HttpGet("expense-pie")]
+        public async Task<IActionResult> GetExpensePieData(
+            [FromQuery] int month, [FromQuery] int year)
+        {
+            var result = await _dashboardService.GetExpensePieData(
+                GetPublicId(), month, year);
+            return Ok(result);
+        }
     }
 }
