@@ -35,6 +35,9 @@ namespace FinanceTracker.Helper
 
             //CC
             services.AddScoped<ICreditCardService, CreditCardService>();
+
+            // transaction
+            services.AddScoped<ITransactionService, TransactionService>();
         }
     }
 }
