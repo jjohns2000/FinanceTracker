@@ -27,4 +27,11 @@
         public string Label { get; set; } = string.Empty;
         public decimal Amount { get; set; }
     }
+    public class SalaryTrendItem
+    {
+        public int Month { get; set; }
+        public int Year { get; set; }
+        public string CompanyName { get; set; } = string.Empty;
+        public decimal TotalNetPay { get; set; }
+    }
 }

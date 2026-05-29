@@ -59,5 +59,12 @@ namespace FinanceTracker.Controllers
                 GetPublicId(), month, year);
             return Ok(result);
         }
+        [HttpGet("salary-trend")]
+        public async Task<IActionResult> GetSalaryTrend([FromQuery] int month, [FromQuery] int year)
+        {
+            var result = await _dashboardService.GetSalaryTrend(
+                GetPublicId(), month, year);
+            return Ok(result);
+        }
     }
 }
