@@ -66,5 +66,13 @@ namespace FinanceTracker.Controllers
                 GetPublicId(), month, year);
             return Ok(result);
         }
+        [HttpGet("financial-summary")]
+        public async Task<IActionResult> GetFinancialSummary(
+    [FromQuery] int month, [FromQuery] int year)
+        {
+            var result = await _dashboardService.GetFinancialSummary(
+                GetPublicId(), month, year);
+            return Ok(result);
+        }
     }
 }
