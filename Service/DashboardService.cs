@@ -11,6 +11,7 @@ namespace FinanceTracker.Services
         Task<IEnumerable<PieDataItem>> GetIncomePieData(Guid publicId, int month, int year);
         Task<IEnumerable<PieDataItem>> GetExpensePieData(Guid publicId, int month, int year);
         Task<IEnumerable<SalaryTrendItem>> GetSalaryTrend(Guid publicId, int month, int year);
+        Task<FinancialSummaryResponse> GetFinancialSummary(Guid publicId, int month, int year);
     }
 
     public class DashboardService : IDashboardService
@@ -145,5 +146,26 @@ namespace FinanceTracker.Services
                     commandType: System.Data.CommandType.StoredProcedure
                 );
             }
+        public async Task<FinancialSummaryResponse> GetFinancialSummary(
+    Guid publicId, int month, int year)
+        {
+            using var connection = _db.CreateConnection();
+            var userId = await GetUserId(publicId);
+
+            var p = new DynamicParameters();
+            p.Add("@UserId", userId);
+            p.Add("@Month", month);
+            p.Add("@Year", year);
+
+            var result = await connection.QueryFirstOrDefaultAsync<string>(
+                "sp_GetFinancialSummary", p,
+                commandType: System.Data.CommandType.StoredProcedure
+            );
+
+            return new FinancialSummaryResponse
+            {
+                Summary = result ?? string.Empty
+            };
+        }
     }
 }

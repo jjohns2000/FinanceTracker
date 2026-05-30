@@ -34,4 +34,9 @@
         public string CompanyName { get; set; } = string.Empty;
         public decimal TotalNetPay { get; set; }
     }
+
+    public class FinancialSummaryResponse
+    {
+        public string Summary { get; set; } = string.Empty;
+    }
 }
