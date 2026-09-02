@@ -38,6 +38,12 @@ namespace FinanceTracker.Helper
 
             // transaction
             services.AddScoped<ITransactionService, TransactionService>();
+            // questions
+            services.AddScoped<ICheckInService, CheckInService>();
+
+            // statement upload
+            services.AddScoped<IStatementService, StatementService>();
+            services.AddHttpClient();
         }
     }
 }

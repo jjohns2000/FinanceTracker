@@ -59,7 +59,8 @@ namespace FinanceTracker.Services
                 UserId = userId,
                 request.CardName,
                 request.CreditLimit,
-                StartDate = request.StartDate.ToString("yyyy-MM-dd")
+                StartDate = request.StartDate.ToString("yyyy-MM-dd"),
+                CardColor = string.IsNullOrEmpty(request.CardColor) ? "#f44336" : request.CardColor
             };
 
             var p = new DynamicParameters();
@@ -83,7 +84,8 @@ namespace FinanceTracker.Services
                 PublicId = request.PublicId.ToString(),
                 request.CardName,
                 request.CreditLimit,
-                StartDate = request.StartDate.ToString("yyyy-MM-dd")
+                StartDate = request.StartDate.ToString("yyyy-MM-dd"),
+                CardColor = string.IsNullOrEmpty(request.CardColor) ? "#f44336" : request.CardColor
             };
 
             var p = new DynamicParameters();

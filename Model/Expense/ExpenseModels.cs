@@ -58,4 +58,12 @@
         public int Year { get; set; }
         public decimal ActualAmount { get; set; }
     }
+    public class UpsertWithdrawalRequest
+    {
+        public Guid AccountPublicId { get; set; }
+        public int Month { get; set; }
+        public int Year { get; set; }
+        public decimal Withdrawal { get; set; }
+        public bool IsTransfer { get; set; } = false; 
+    }
 }

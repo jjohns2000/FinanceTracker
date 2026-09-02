@@ -7,6 +7,7 @@
         public string CardName { get; set; } = string.Empty;
         public decimal CreditLimit { get; set; }
         public DateTime StartDate { get; set; }
+        public string CardColor { get; set; } = "#f44336";
         public DateTime CreatedAt { get; set; }
     }
 
@@ -17,6 +18,7 @@
         public int CreditCardId { get; set; }
         public string CardName { get; set; } = string.Empty;
         public decimal CreditLimit { get; set; }
+        public string CardColor { get; set; } = "#f44336";
         public int Month { get; set; }
         public int Year { get; set; }
         public decimal BillAmount { get; set; }
@@ -29,6 +31,7 @@
         public string CardName { get; set; } = string.Empty;
         public decimal CreditLimit { get; set; }
         public DateTime StartDate { get; set; }
+        public string CardColor { get; set; } = "#f44336";
     }
 
     public class UpdateCreditCardRequest
@@ -37,6 +40,7 @@
         public string CardName { get; set; } = string.Empty;
         public decimal CreditLimit { get; set; }
         public DateTime StartDate { get; set; }
+        public string CardColor { get; set; } = "#f44336";
     }
 
     public class UpsertMonthlyCreditCardRequest
